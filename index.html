@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glaisel Pico MIDPortfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Lora:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --pastel-blue: #dcf2ff; 
+            --pastel-pink: #ffe3ec; 
+            --pastel-pink-dark: #ffb6c1; 
+            --text-dark: #2d3142; 
+            --text-muted: #5f6c7b; 
+            --white: #ffffff;
+            --radius-lg: 35px;
+            --radius-md: 20px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--pastel-blue);
+            height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            color: var(--text-dark);
+        }
+
+        .app-window {
+            width: 95%; max-width: 1100px; height: 85vh;
+            background: var(--white); border-radius: var(--radius-lg);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; overflow: hidden;
+            border: 8px solid var(--white);
+        }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px; background: var(--white);
+            border-bottom: 2px solid var(--pastel-blue);
+        }
+        .brand { font-family: 'Playfair Display', serif; font-weight: 800; font-size: 1.5rem; color: var(--text-dark); }
+        .nav-menu { display: flex; gap: 10px; }
+        .nav-btn {
+            background: transparent; border: 2px solid var(--pastel-blue);
+            padding: 10px 20px; border-radius: 50px; color: var(--text-dark);
+            font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+        .nav-btn:hover { background: var(--pastel-blue); }
+        .active-btn { background: var(--pastel-pink) !important; color: var(--text-dark) !important; border-color: var(--pastel-pink); }
+
+        #viewport { flex: 1; overflow-y: auto; scroll-behavior: smooth; background: var(--white); }
+
+        /* ABOUT ME STYLING */
+        .final-about { text-align: center; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+        .profile-img-bottom { width: 190px; height: 190px; border-radius: 50%; object-fit: cover; border: 8px solid var(--pastel-pink); margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .about-title { font-family: 'Playfair Display', serif; font-size: 3rem; letter-spacing: 5px; margin-bottom: 20px; color: var(--text-dark); }
+        .card-box, .sub-card { background: var(--pastel-blue); padding: 25px; border-radius: var(--radius-md); margin-bottom: 20px; }
+        .academic-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 20px; width: 100%; max-width: 800px; }
+
+        /* MOOD BOARD */
+        .mood-container { display: flex; gap: 20px; margin-top: 15px; }
+        .mood-item { flex: 1; text-align: center; }
+        .mood-img { width: 100%; height: 160px; object-fit: cover; border-radius: 15px; border: 4px solid var(--white); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+        /* QUIZ STYLING */
+        .quiz-card { background: var(--pastel-blue); padding: 30px; border-radius: var(--radius-md); margin-bottom: 20px; text-align: left; }
+        .quiz-option { 
+            display: block; width: 100%; padding: 15px; margin: 10px 0; 
+            background: var(--white); border: 2px solid transparent; 
+            border-radius: 15px; cursor: pointer; transition: 0.3s; text-align: left;
+            font-family: 'Poppins'; font-size: 0.95rem;
+        }
+        .quiz-option.selected { border-color: var(--pastel-pink-dark); background: var(--pastel-pink); }
+        #quiz-result { margin-top: 20px; font-weight: 700; font-size: 1.2rem; color: #ff6b81; }
+
+        /* STORIES ACCORDION */
+        .story-card { background: var(--pastel-blue); border-radius: var(--radius-md); overflow: hidden; cursor: pointer; margin-bottom: 15px; transition: 0.3s; }
+        .story-header { padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 1.1rem; }
+        .story-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: var(--white); }
+        .story-card.open { background: var(--pastel-pink); }
+        .story-card.open .story-body { max-height: 500px; border-top: 1px solid var(--pastel-blue); }
+
+        /* FORMS */
+        .flex-view { display: flex; align-items: center; min-height: 100%; padding: 50px 70px; gap: 50px; }
+        .action-btn { width: 100%; padding: 16px; background: var(--pastel-pink); border: none; border-radius: 18px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 1rem; }
+        .action-btn:hover { background: var(--pastel-pink-dark); }
+        input { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 18px; border: 2px solid var(--pastel-blue); outline: none; font-family: 'Poppins'; }
+    </style>
+</head>
+<body>
+
+<div class="app-window">
+    <nav>
+        <div class="brand">GLAISEL ANNE PICO</div>
+        <div class="nav-menu">
+            <button class="nav-btn active-btn" id="btn-register" onclick="handleNav('register')">Register</button>
+            <button class="nav-btn" id="btn-login" onclick="handleNav('login')">Login</button>
+            <button class="nav-btn" id="btn-quiz" onclick="handleNav('quiz')">Quiz</button>
+            <button class="nav-btn" id="btn-info" onclick="handleNav('info')">Info</button>
+            <button class="nav-btn" id="btn-about" onclick="handleNav('about')">About Me</button>
+            <button class="nav-btn" id="btn-stories" onclick="handleNav('stories')">Stories</button>
+        </div>
+    </nav>
+    <div id="viewport"></div>
+</div>
+
+<script>
+    const viewport = document.getElementById('viewport');
+    let userAnswers = {};
+
+    function handleNav(view) {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-btn'));
+        const activeBtn = document.getElementById('btn-' + view);
+        if(activeBtn) activeBtn.classList.add('active-btn');
+
+        if(view === 'register') renderRegister();
+        if(view === 'login') renderLogin();
+        if(view === 'quiz') renderQuiz();
+        if(view === 'info') renderInfo();
+        if(view === 'about') renderAboutMe();
+        if(view === 'stories') renderStories();
+    }
+
+    function renderRegister() {
+        viewport.innerHTML = `<div class="flex-view">
+            <div style="flex:1;"><h1>Create <span style="color:var(--text-muted)">Account</span></h1><p>Join the portal.</p></div>
+            <div style="flex:1; background: var(--pastel-blue); padding: 40px; border-radius: 25px;">
+                <input type="text" placeholder="Full Name"><input type="email" placeholder="Email"><input type="password" placeholder="Password">
+                <button class="action-btn" onclick="handleNav('login')">Create Account</button>
+            </div>
+        </div>`;
+    }
+
+    function renderLogin() {
+        viewport.innerHTML = `<div class="flex-view">
+            <div style="flex:1;"><h1>Welcome <span style="color:var(--text-muted)">Back</span></h1><p>Enter your details.</p></div>
+            <div style="flex:1; background: var(--pastel-blue); padding: 40px; border-radius: 25px;">
+                <input type="email" placeholder="Email"><input type="password" placeholder="Password">
+                <button class="action-btn" onclick="handleNav('about')">Login</button>
+            </div>
+        </div>`;
+    }
+
+    function renderQuiz() {
+        const questions = [
+            { q: "Which of these is used to type letters?", a: ["Mouse", "Keyboard", "Monitor"], c: 1 },
+            { q: "What is the 'brain' of the computer?", a: ["CPU", "RAM", "Battery"], c: 0 },
+            { q: "Which one is a social media app?", a: ["Excel", "Facebook", "Photoshop"], c: 1 },
+            { q: "What do you use to click on things on a screen?", a: ["Keyboard", "Printer", "Mouse"], c: 2 },
+            { q: "Portable computer that you can carry is called?", a: ["Desktop", "Laptop", "Server"], c: 1 }
+        ];
+
+        let html = `<div style="padding:50px 70px; max-width:850px; margin:auto; text-align:center;">
+            <h1 style="margin-bottom:30px;">Computer Quiz</h1>`;
+        
+        questions.forEach((item, qIdx) => {
+            html += `
+            <div class="quiz-card" id="q-container-${qIdx}">
+                <p style="font-weight:600;">${qIdx + 1}. ${item.q}</p>
+                ${item.a.map((opt, aIdx) => `
+                    <button class="quiz-option q-opt-${qIdx}" id="opt-${qIdx}-${aIdx}" onclick="selectOption(${qIdx}, ${aIdx})">
+                        ${String.fromCharCode(65 + aIdx)}. ${opt}
+                    </button>
+                `).join('')}
+            </div>`;
+        });
+
+        html += `<div id="quiz-result"></div>
+                 <button class="action-btn" style="max-width:200px; display:block; margin:20px auto;" onclick="checkQuiz()">Submit Quiz</button></div>`;
+        viewport.innerHTML = html;
+        userAnswers = {}; 
+    }
+
+    function selectOption(qIdx, aIdx) {
+        document.querySelectorAll(`.q-opt-${qIdx}`).forEach(btn => btn.classList.remove('selected'));
+        document.getElementById(`opt-${qIdx}-${aIdx}`).classList.add('selected');
+        userAnswers[qIdx] = aIdx;
+    }
+
+    function checkQuiz() {
+        const correctAnswers = [1, 0, 1, 2, 1];
+        let score = 0;
+        let answeredAll = true;
+
+        for(let i=0; i<5; i++) {
+            if(userAnswers[i] === undefined) { answeredAll = false; break; }
+            if(userAnswers[i] === correctAnswers[i]) score++;
+        }
+
+        if(!answeredAll) {
+            alert("Please answer all questions first!");
+            return;
+        }
+
+        document.getElementById('quiz-result').innerHTML = `Quiz Submitted! Your Score: ${score} / 5`;
+        alert(`You got ${score} out of 5! Click OK to see Info.`);
+        handleNav('info');
+    }
+
+    function renderAboutMe() {
+        viewport.innerHTML = `
+        <div class="final-about">
+            <h2 class="about-title">ABOUT ME</h2>
+            <img src="g.png" alt="Glai" class="profile-img-bottom">
+            <div style="max-width: 800px; width: 100%;">
+                <p style="font-family: 'Lora'; font-style: italic; font-size: 1.4rem; color: var(--text-muted); margin-bottom: 20px;">GLAISEL ANNE GARCIA PICO</p>
+                <p style="margin-bottom: 30px; font-size: 1.1rem; line-height:1.8;">Hi! I'm Glai. I am intuitive, resilient, and thoughtful. This portal showcases my journey as a student in <strong>INFORMATION TECHNOLOGY</strong>.</p>
+                
+                <div class="academic-grid">
+                    <div class="sub-card">
+                        <h4 style="margin-bottom:15px;"><i class="fas fa-book"></i> Academic Load</h4>
+                        <p style="font-size: 1rem; line-height:2;">• IM102 – Advanced Database System<br>• NET101 – Networking 1<br>• IPT101 – Integrative Programming</p>
+                    </div>
+                    <div class="sub-card" style="text-align: left;">
+                        <h2><i class="fas fa-users"></i> Connections</h2>
+                        <p style="margin-top:10px;"><strong>Kim Ashlee Nicor</strong> – A true friend through thick and thin.</p>
+                        <p><strong>Trixie Eunice Almodovar</strong> – Kindness personified.</p>
+                    </div>
+                    <div class="sub-card">
+                        <h2><i class="fas fa-heart"></i> Movies I Love</h2>
+                        <p><strong>Hello, Love, Goodbye</strong>, <strong>One More Chance</strong>, <strong>Love Is Color Blind</strong></p>
+                        <div class="mood-container">
+                            <div class="mood-item"><h3>HAPPY</h3><img src="h.png" class="mood-img"></div>
+                            <div class="mood-item"><h3>SAD</h3><img src="s.png" class="mood-img"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    function renderInfo() {
+        viewport.innerHTML = `<div style="padding:50px 70px; max-width:850px; margin:auto;">
+            <h1 style="text-align:center; margin-bottom:30px;">Quick Info</h1>
+            <div class="card-box"><strong>Input Device:</strong> Keyboard and Mouse.</div>
+            <div class="card-box"><strong>Output Device:</strong> Monitor and Printer.</div>
+            <div class="card-box"><strong>Storage:</strong> HDD, SSD, and Cloud.</div>
+        </div>`;
+    }
+
+    function renderStories() {
+        const stories = [
+            { title: "The Little Cloud", text: "Puffy lived high in the sky but felt very small. He was scared to rain. Then, tiny raindrops fell, the flowers smiled, and Puffy found his purpose." },
+            { title: "The Brave Turtle", text: "Timo was a slow turtle who proved that steady steps save the day. His journey reminded everyone that pace doesn't matter as long as you don't stop." },
+            { title: "Magic Crayon", text: "Benny discovered that creativity is a responsibility. Every stroke he made changed the world. He drew a world where everyone had a place to belong." },
+            { title: "The Shy Star", text: "Twinkle learned to shine only when the world was darkest. She realized that even a small light can chase away the dark." }
+        ];
+        viewport.innerHTML = `<div style="padding:50px 70px; max-width:800px; margin:auto;">
+            <h1 style="text-align:center; margin-bottom:40px;">Stories</h1>
+            ${stories.map((s, i) => `
+                <div class="story-card" id="card-${i}" onclick="toggleStory(${i})">
+                    <div class="story-header"><span>${s.title}</span><i class="fas fa-plus"></i></div>
+                    <div class="story-body"><p style="line-height:1.9; padding: 25px;">${s.text}</p></div>
+                </div>`).join('')}
+        </div>`;
+    }
+
+    function toggleStory(i) {
+        document.getElementById(`card-${i}`).classList.toggle('open');
+    }
+
+    handleNav('register');
+</script>
+</body>
+</html>
